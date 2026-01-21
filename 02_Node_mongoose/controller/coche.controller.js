@@ -1,4 +1,4 @@
-const CocheModel = require("../model/coche.models"); //Importo el modelo
+const CocheModel = require("../model/coche.models.js"); //Importo el modelo
 const coches = require("../bbdd/coche.bbdds"); //Importo los coches
 
 const deleteOne = async (req, res) => {
