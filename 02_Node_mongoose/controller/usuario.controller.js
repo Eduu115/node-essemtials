@@ -5,18 +5,44 @@ const UsuarioModel = require("../model/usuario.models.js");
 const usuarios = require("../bbdd/usuarios.bbdd.js");
 
 class UsuarioController {
+// ---------------------------------------------------------- SPECIAL FUNCTIONS -----------------------------------------------------------------
 
-    //
-    // TODO: REGISTRO
-    // findbyidanddelete
-    // terminar crud al completo, probar findbyusername solo
-    // 
-    
-    async findAll(req, res) {
-        const result = await UsuarioModel.find();
-        return res.status(200).send(result);
+    async findByusername(req, res) {
+        try{
+            const result = await UsuarioModel.findOne({username:req.body.username});
+            if (!result) return res.status(404).send("Usuario no encontrado");
+            return res.status(200).send(result);
+        }catch(error){
+            console.error("Error en el findByusername: ", error);
+            return res.status(500).json({mensaje: "Error interno"});
+        }
     }
 
+    async findByusernameAndPassword(req, res) {
+        try{
+            const result = await UsuarioModel.findOne({username:req.body.username, password:req.body.password});
+            if (!result) return res.status(401).send("Usuario o contraseña incorrectos");
+            return res.status(200).send(result);
+        }catch(error){
+            console.error("Error en el findByusernameAndPassword: ", error);
+            return res.status(500).json({mensaje: "Error interno"});
+        }
+
+    }
+        
+    async cargaInicial(req, res) {
+        try{
+            await UsuarioModel.insertMany(usuarios);
+            return res.status(201).send("Usuarios cargados correctamente");
+        }catch(error){
+            console.error("Error en la carga inicial de usuarios: ", error);
+            return res.status(500).json({mensaje: "Error interno"});
+        }
+    }
+    
+    
+//----------------------------------------------------------- CRUD FUNCTIONS -----------------------------------------------------------------
+     
     async findById(req, res) {
         try{
             const result = await UsuarioModel.findById(req.params.id);
@@ -28,23 +54,17 @@ class UsuarioController {
         }
     }
 
+    async findAll(req, res) {
+        const result = await UsuarioModel.find();
+        return res.status(200).send(result);
+    }
+
     async insertOne(req, res) {
         try{
             const result = await UsuarioModel.create(req.body);
             return res.status(201).send(result);
         }catch(error){
             console.error("Error en el insertOne: ", error);
-            return res.status(500).json({mensaje: "Error interno"});
-        }
-    }
-
-    async findByusername(req, res) {
-        try{
-            const result = await UsuarioModel.findOne({username:req.body.username});
-            if (!result) return res.status(404).send("Usuario no encontrado");
-            return res.status(200).send(result);
-        }catch(error){
-            console.error("Error en el findByusername: ", error);
             return res.status(500).json({mensaje: "Error interno"});
         }
     }
@@ -71,27 +91,6 @@ class UsuarioController {
         }
     }
 
-    async findByusernameAndPassword(req, res) {
-        try{
-            const result = await UsuarioModel.findOne({username:req.body.username, password:req.body.password});
-            if (!result) return res.status(401).send("Usuario o contraseña incorrectos");
-            return res.status(200).send(result);
-        }catch(error){
-            console.error("Error en el findByusernameAndPassword: ", error);
-            return res.status(500).json({mensaje: "Error interno"});
-        }
-
-    }
-    
-    async cargaInicial(req, res) {
-        try{
-            await UsuarioModel.insertMany(usuarios);
-            return res.status(201).send("Usuarios cargados correctamente");
-        }catch(error){
-            console.error("Error en la carga inicial de usuarios: ", error);
-            return res.status(500).json({mensaje: "Error interno"});
-        }
-    }
 }
 
 module.exports = new UsuarioController();
