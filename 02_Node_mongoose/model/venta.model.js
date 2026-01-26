@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
 const ventaSchema = new mongoose.Schema({
-    coche: {
+    idCoche: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Coche",
         required: true
     },
     
-    usuario: {
+    idUsuario: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"usuario",
+        ref:"Usuario",
         required: true
     },
 
@@ -20,6 +20,6 @@ const ventaSchema = new mongoose.Schema({
     versionKey: false, timestamps: true
 });
 
-const Venta = mongoose.model('venta', ventaSchema);
+const Venta = mongoose.model('Venta', ventaSchema);
 
 module.exports = Venta

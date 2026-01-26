@@ -1,6 +1,3 @@
-const express = require("express");
-const ruta = express.Router();
-
 const VentaModel = require("../model/venta.model.js");
 const CocheModel = require("../model/coche.models.js");
 const UsuarioModel = require("../model/usuario.models.js")
@@ -31,9 +28,9 @@ class VentaController {
             const result = await venta.save()
             
             cocheVenta.isVendido = true;
-            await cocheVenta.save();
+            const cocheResultado = await cocheVenta.save();
 
-            return res.status(201).json({message: "Venta registrada correctamente"})
+            return res.status(201).json({message: "Venta registrada correctamente", result, " Coche vendido": cocheResultado})
         
         }catch(err){
         
@@ -45,4 +42,3 @@ class VentaController {
 }
 
 module.exports = new VentaController();
-module.exports = ruta;
