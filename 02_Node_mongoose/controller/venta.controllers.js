@@ -10,28 +10,28 @@ class VentaController {
     async registro(req,res){
         try{
             // obtenemos user
-            const usuario = await  UsuarioModel.findById(req.body.idUsuario);
-            if (!usuario)
+            const usuarioVenta = await  UsuarioModel.findById(req.body.idUsuario);
+            if (!usuarioVenta)
                 return res.status(404).send("Usuario no existe")
             // obtenemos coche
-            const coche = await CocheModel.findById(req.body.idCoche)
-            if (!coche)
+            const cocheVenta = await CocheModel.findById(req.body.idCoche)
+            if (!cocheVenta)
                 return res.status(404).send("Coche no existe") 
             // comprobamos si esta vendido
-            if (coche.isVendido)
+            if (cocheVenta.isVendido)
                 return res.status(400).send("Coche ya vendido")
 
             // creamos la venta
             const venta = new VentaModel({
-                idUsuario: usuario._id,
-                idCoche: coche._id,
-                precio: coche.precio
+                idUsuario: usuarioVenta._id,
+                idCoche: cocheVenta._id,
+                precio: cocheVenta.precio
             });
 
             const result = await venta.save()
             
-            coche.isVendido = true;
-            await coche.save();
+            cocheVenta.isVendido = true;
+            await cocheVenta.save();
 
             return res.status(201).json({message: "Venta registrada correctamente"})
         
